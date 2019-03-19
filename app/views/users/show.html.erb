@@ -1,0 +1,12 @@
+<h1>Hi! My Friend <%= @user.name %></h1>
+<p>This is your profile page</p>
+<div class="form-group">
+    <label for="exampleInputEmail1">Email address:</label>
+    <div><%= @user.email %></div>
+</div>
+<div class="form-group">
+    <label for="exampleInputPassword1">Name:</label>
+    <div><%= @user.name %></div>
+</div>
+<a href="/users/<%= @user.id  %>/edit">Edit my account</a><br/>
+<a href="/logout">Logout</a>

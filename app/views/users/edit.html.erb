@@ -1,0 +1,69 @@
+
+<h1>Edit your data</h1>
+<% if @user.errors.any? %>
+    <p class="error"><%= @user.errors.full_messages %></p>
+<% end %>
+<form  id="user-edit-form" action="/users/<%= @user.id %>" accept-charset="UTF-8" method="post" enctype="multipart/form-data">
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+    <input type="hidden" name="_method" value="patch">
+    <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <div><%= @user.email %></div>
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">Name</label>
+        <input id="name" name="name" type="text" class="form-control"  placeholder="JohnLiu" value="<%= @user.name %>">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input id="password" name="password" type="password" class="form-control"  placeholder="Password" value="<%= @user.password %>">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">Confirm Password</label>
+        <input id="confirm_password" name="confirm_password" type="password" class="form-control" placeholder="re-enter Password" value="<%= @user.password %>">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<script>
+$.validator.setDefaults({
+    submitHandler: function(form) {
+      alert("Updated success!");
+      form.submit();
+    }
+});
+$().ready(function() {
+  $("#user-edit-form").validate({
+    rules: {
+      password: {
+        required: true,
+        minlength: 8
+      },
+      confirm_password: {
+        required: true,
+        minlength: 8,
+        equalTo: "#password"
+      },
+      name: {
+        required: true,
+        minlength: 5,
+      }
+    },
+    messages: {
+      password: {
+        required: "Please enter password",
+        minlength: "The password should above 8 characters"
+      },
+      confirm_password: {
+        required: "Please enter password again",
+        minlength: "The confirm password should above 8 characters",
+        equalTo: "The confirm password doen't equal to password"
+      },
+      name:{
+        required: "Please enter name",
+        minlength: "The confirm password should above 5 characters",
+      }
+    }
+   })
+  })
+</script>
