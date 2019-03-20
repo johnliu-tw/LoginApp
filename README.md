@@ -1,24 +1,28 @@
-# README
+## LoginAPP
+### Getting started
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+#### Prerequisites
 
-Things you may want to cover:
+Ruby version: 2.3.1p112
+Rails version: 5.1.6.2
+MySQL version: 5.7.19
 
-* Ruby version
+#### Installing
 
-* System dependencies
+bundle all gem
+```bash
+bundle install
+```
 
-* Configuration
+migrate migration files
+```bash
+rake db:migrate
+```
 
-* Database creation
+run this app
+```bash
+rails s
+```
+#### Built with
+1. [letter_opener_web](https://github.com/fgrehm/letter_opener_web)(we can check all emails on localhost:3000/letter_opener)
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
