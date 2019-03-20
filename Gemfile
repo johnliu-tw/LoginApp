@@ -10,6 +10,9 @@ end
 gem 'rails', '~> 5.1.6', '>= 5.1.6.1'
 # Use sqlite3 as the database for Active Record
 gem 'mysql2'
+group :production do
+  gem 'pg'
+end
 gem "letter_opener_web"
 # Use Puma as the app server
 gem 'puma', '~> 3.7'

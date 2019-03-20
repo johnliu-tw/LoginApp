@@ -1,0 +1,55 @@
+<h1>Reset password</h1>
+<% if @user.errors.any? %>
+    <p class="error"><%= @user.errors.full_messages %></p>
+<% end %>
+<p id="notice" class="col-12 error"><%= notice %></p>
+<p>Please fill out your email to send reset password email to your email box.</p>
+<form id="password-form" action="/passwords/update" accept-charset="UTF-8" method="post" enctype="multipart/form-data">
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+    <input type="hidden" name="id" value="<%= @user.id %>">
+    <div class="form-group">
+        <label for="exampleInputPassword1">New Password</label>
+        <input id="password" name="password" type="password" class="form-control"  placeholder="Password">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">Confirm Password</label>
+        <input id="confirm_password" name="confirm_password" type="password" class="form-control" placeholder="re-enter Password">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+
+<script>
+$.validator.setDefaults({
+    submitHandler: function(form) {
+      alert("Reset success!");
+      form.submit();
+    }
+});
+$().ready(function() {
+  $("#password-form").validate({
+    rules: {
+      password: {
+        required: true,
+        minlength: 8
+      },
+      confirm_password: {
+        required: true,
+        minlength: 8,
+        equalTo: "#password"
+      }
+    },
+    messages: {
+      password: {
+        required: "Please enter password",
+        minlength: "The password should above 8 characters"
+      },
+      confirm_password: {
+        required: "Please enter password again",
+        minlength: "The confirm password should above 8 characters",
+        equalTo: "The confirm password doen't equal to password"
+      }
+    }
+   })
+  })
+</script>

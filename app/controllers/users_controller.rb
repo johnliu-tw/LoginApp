@@ -35,6 +35,7 @@ class UsersController < ApplicationController
             format.html { redirect_to @user}
         else
             format.html { render :edit }
+            format.json { render json: @user.errors, status: :unprocessable_entity }
         end
        end
     end

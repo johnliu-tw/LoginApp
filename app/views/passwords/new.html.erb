@@ -1,0 +1,36 @@
+<h1>Forget password</h1>
+<p id="notice" class="col-12 error"><%= notice %></p>
+<p>Please fill out your email to send reset password email to your email box.</p>
+<form id="password-form" action="/passwords/reset_password" accept-charset="UTF-8" method="post" enctype="multipart/form-data">
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+    <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input id="email" name="email"type="email" class="form-control" aria-describedby="emailHelp" placeholder="Enter email">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+<a href="/">Previous page</a>
+<script>
+$.validator.setDefaults({
+    submitHandler: function(form) {
+      alert("Reset submit success!");
+      form.submit();
+    }
+});
+$().ready(function() {
+  $("#password-form").validate({
+    rules: {
+      email: {
+        required: true,
+        email: true
+      },
+    },
+    messages: {
+      email: {
+        required: "Please enter email",
+        email: "Please check the email format is correct"
+      }
+    }
+   })
+  })
+</script>
