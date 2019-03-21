@@ -15,6 +15,8 @@ bundle all gem
 bundle install
 ```
 
+please check db file on config/database.yml to setup your db setting
+
 migrate migration files
 ```bash
 rake db:migrate
