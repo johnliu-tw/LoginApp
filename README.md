@@ -4,7 +4,9 @@
 #### Prerequisites
 
 Ruby version: 2.3.1p112
+
 Rails version: 5.1.6.2
+
 MySQL version: 5.7.19
 Rspec version: 3.7.2
 
