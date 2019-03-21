@@ -22,7 +22,7 @@ class PasswordsController < ApplicationController
 
     def reset_password
         @user = User.find_by(email: params[:email])
-        if @user
+        if @user 
             @user.password = "resetpassword"
             @user.reset_sent_at = Time.now
 
@@ -31,10 +31,15 @@ class PasswordsController < ApplicationController
             @user.reset_token = encrypted_token
             if @user.save
                 ContactMailer.reset_email(@user.email, @user.reset_token, request).deliver
-                redirect_to '/passwords/new', notice: "The reset password email has been sent, please check your email box"
+                flash[:notice] = "The reset password email has been sent, please check your email box"
+                render :new
+            else 
+                flash[:notice] = "The data has some issues"
+                render :new                
             end
         else
-            redirect_to '/passwords/new', notice: "This email doesn't exist"
+            flash[:notice] = "This email doesn't exist"
+            render :new
         end
     end
 
@@ -44,13 +49,15 @@ class PasswordsController < ApplicationController
 
         if @user.present?
             if Time.now - 6.hours >= @user.reset_sent_at
-                redirect_to '/passwords/new', notice: "This email is invalid because you need to reset within 6 hours, please submit the reset email request again" 
+                flash[:notice] = "This email is invalid because you need to reset within 6 hours, please submit the reset email request again" 
+                render :new
             else
                 session[:user] = @user
                 redirect_to '/passwords/edit'
             end
         else 
-            redirect_to '/passwords/new', notice: "We can't find the user accroding to your token or you have submitted the new reset request, please submit the reset email request again"
+            flash[:notice] = "We can't find the user accroding to your token or you have submitted the new reset request, please submit the reset email request again"
+            render :new
         end
     end
 

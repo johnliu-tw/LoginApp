@@ -6,7 +6,6 @@ class UsersController < ApplicationController
     end
 
     def new
-        @user = User.new()
     end
 
     def create 
@@ -48,10 +47,12 @@ class UsersController < ApplicationController
                 session[:user] = @user
                 redirect_to @user
             else
-                redirect_to root_path, notice: "This password is incorrect"
+                flash[:notice] = "This password is incorrect"
+                redirect_to root_path
             end
         else
-            redirect_to root_path, notice: "This email doesn't exist"
+            flash[:notice] = "This email doesn't exist"
+            redirect_to root_path
         end
 
 
