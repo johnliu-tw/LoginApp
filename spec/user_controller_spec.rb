@@ -1,6 +1,6 @@
 require 'rails_helper'
 describe UsersController, :type => :controller do
-    context "when users havn't signed up" do
+    context "when user havn't signed up" do
         it "could see index page" do
             get :index
             expect(response.status).to eq(200)
@@ -26,44 +26,44 @@ describe UsersController, :type => :controller do
         end
     end
 
-    context "when users has signed up" do
+    context "when user has signed up" do
         it "could login with correct account" do
             post :login, :params => { :email => "aa@aa.com", :password => "resetpassword" }
-            expect(session[:user]).to eq(assigns(:user))
+            expect(session[:user]).to eq(assigns(:user)["id"])
         end
         it "couldn't login with incorrect password" do
             post :login, :params => { :email => "aa@aa.com", :password => "11111111" }
-            expect(flash[:notice]).to eq("This password is incorrect")
-        end
+            expect(flash[:notice]).to eq("The email or password is incorrect")
+        end  
         it "couldn't login with incorrect email" do
-            post :login, :params => { :email => "gg@gg.com", :password => "11111111" }
-            expect(flash[:notice]).to eq("This email doesn't exist")
-        end        
+            post :login, :params => { :email => "aaa@aa.com", :password => "resetpassword" }
+            expect(flash[:notice]).to eq("The email or password is incorrect")
+        end  
     end
 
-    context "when users has logged in" do
+    context "when user has logged in" do
         before(:each) do
             post :login, :params => { :email => "aa@aa.com", :password => "resetpassword" }
-            expect(session[:user]).to eq(assigns(:user))
+            expect(session[:user]).to eq(assigns(:user)["id"])
         end
         it "could log out" do
             post :logout
             expect(session[:user]).to eq(nil)
         end
         it "could check it's page" do
-            get :show, :params => {:id => session[:user]['id']}
+            get :show, :params => {:id => session[:user]}
             expect(response).to render_template(:show)
         end       
         it "could check edit infomation page" do
-            get :edit, :params => {:id => session[:user]['id']}
+            get :edit, :params => {:id => session[:user]}
             expect(response).to render_template(:edit)
         end    
         it "could update it's data with correct format" do
-            get :update, :params => { :id => session[:user]['id'], :name => "TestName", :password => "22222222" }
+            get :update, :params => { :id => session[:user], :name => "TestName", :password => "22222222" }
             expect(response.status).to eq(302)
         end      
         it "couldn't update it's data with incorrect format" do
-            get :update, :params => { :id => session[:user]['id'], :name => "TestName", :password => "22222" }
+            get :update, :params => { :id => session[:user], :name => "TestName", :password => "22222" }
             expect(response).to render_template(:edit)
         end           
     end 

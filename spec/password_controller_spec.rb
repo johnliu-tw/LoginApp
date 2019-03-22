@@ -7,7 +7,7 @@ describe PasswordsController, :type => :controller do
         end
         it "could send reset password requirement with correct email" do
             post :reset_password, :params => {:email => "aa@aa.com"}
-            expect(assigns(:user).password).to eq("resetpassword")
+            expect(flash[:notice]).to eq("The reset password email has been sent, please check your email box")
         end
         it "couldn't send reset password requirement with incorrect email" do
             post :reset_password, :params => {:email => "test@test.com"}
@@ -29,11 +29,11 @@ describe PasswordsController, :type => :controller do
             expect(flash[:notice]).to eq("This email is invalid because you need to reset within 6 hours, please submit the reset email request again")
         end
         it "could update password with correct format" do
-            post :update, :params => {:id => 1 ,:password => "thisistestpassword"}
+            post :update_password, :params => {:id => 1 ,:password => "thisistestpassword"}
             expect(response.status).to eq(302)
         end
         it "couldn't update password with incorrect format" do
-            post :update, :params => {:id => 1, :password => "111"}
+            post :update_password, :params => {:id => 1, :password => "111"}
             expect(response).to render_template(:edit)
         end
     end

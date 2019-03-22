@@ -2,22 +2,27 @@ class UsersController < ApplicationController
     before_action :set_user, only: [:show, :edit, :update, :destroy]
     before_action :check_login, only: [:show, :edit, :update, :logout]
     def index
-
+        @user = User.find_by(id: session[:user])
     end
 
     def new
+        @user = User.new()
     end
 
     def create 
         @user = User.new(email: params[:email], password: params[:password])
-        respond_to do |format|
+        if @user.invalid?
+            render :new
+        else
+            @user.password_hash = params[:password]
+            respond_to do |format|
             if @user.save
-              session[:user] = @user
-              ContactMailer.welcome_email(@user.email).deliver
-              format.html { redirect_to @user }
-            else
-              format.html { render :new }
-              format.json { render json: @user.errors, status: :unprocessable_entity }
+                  session[:user] = @user.id
+                  ContactMailer.welcome_email(@user.email).deliver
+                  format.html { redirect_to @user }
+                else
+                  format.html { render :new }
+                end
             end
         end
     end
@@ -29,29 +34,30 @@ class UsersController < ApplicationController
     end
 
     def update
-       respond_to do |format|
-        if @user.update(name: params[:name], password: params[:password])
-            format.html { redirect_to @user}
-        else
-            format.html { render :edit }
-            format.json { render json: @user.errors, status: :unprocessable_entity }
+      @user.password = params[:password]
+      if @user.invalid?
+        render :edit
+      else
+        @user.password_hash = params[:password]
+        respond_to do |format|
+            if @user.update(name: params[:name])
+                format.html { redirect_to @user}
+            else
+                format.html { render :edit }
+                format.json { render json: @user.errors, status: :unprocessable_entity }
+            end
         end
-       end
+      end
     end
 
     def login
         @user = User.find_by(email: params[:email])
-        if @user
-            @user = User.find_by(email: params[:email], password: params[:password])
-            if @user
-                session[:user] = @user
+        
+        if @user and @user.password_hash == params[:password]
+                session[:user] = @user.id
                 redirect_to @user
-            else
-                flash[:notice] = "This password is incorrect"
-                redirect_to root_path
-            end
         else
-            flash[:notice] = "This email doesn't exist"
+            flash[:notice] = "The email or password is incorrect"
             redirect_to root_path
         end
 
@@ -63,6 +69,7 @@ class UsersController < ApplicationController
         redirect_to root_path
     end
 
+    private
     def set_user
         @user = User.find(params[:id])
     end

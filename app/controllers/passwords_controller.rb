@@ -4,18 +4,23 @@ class PasswordsController < ApplicationController
     end
 
     def edit
-        @user = User.find_by(id: session[:user]["id"])
+        @user = User.find_by(id: session[:user])
     end
 
-    def update
+    def update_password
         @user = User.find_by(id: params[:id])
-
-        respond_to do |format|
-            if @user.update(password: params[:password])
-                format.html { redirect_to @user}
-            else
-                format.html { render :edit }
-                format.json { render json: @user.errors, status: :unprocessable_entity }
+        @user.password = params[:password]
+        if @user.invalid?
+            render :edit
+        else
+            respond_to do |format|
+                @user.password_hash = params[:password]
+                if @user.save
+                    format.html { redirect_to @user}
+                else
+                    format.html { render :edit }
+                    format.json { render json: @user.errors, status: :unprocessable_entity }
+                end
             end
         end
     end
@@ -23,7 +28,7 @@ class PasswordsController < ApplicationController
     def reset_password
         @user = User.find_by(email: params[:email])
         if @user 
-            @user.password = "resetpassword"
+            @user.password_hash = "resetpassword"
             @user.reset_sent_at = Time.now
 
             crypt = ActiveSupport::MessageEncryptor.new("thisisanencryptorkeyforlogin-app")
@@ -52,7 +57,7 @@ class PasswordsController < ApplicationController
                 flash[:notice] = "This email is invalid because you need to reset within 6 hours, please submit the reset email request again" 
                 render :new
             else
-                session[:user] = @user
+                session[:user] = @user.id
                 redirect_to '/passwords/edit'
             end
         else 
