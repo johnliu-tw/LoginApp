@@ -20,11 +20,12 @@
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+<a href="/">Previous page</a>
 
 <script>
 $.validator.setDefaults({
     submitHandler: function(form) {
-      alert("Sign up success!");
+      alert("Sign up submit success!");
       form.submit();
     }
 });

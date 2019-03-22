@@ -4,7 +4,7 @@
 <% end %>
 <p id="notice" class="col-12 error"><%= notice %></p>
 <p>Please fill out your email to send reset password email to your email box.</p>
-<form id="password-form" action="/passwords/update" accept-charset="UTF-8" method="post" enctype="multipart/form-data">
+<form id="password-form" action="/passwords/update_password" accept-charset="UTF-8" method="post" enctype="multipart/form-data">
     <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
     <input type="hidden" name="id" value="<%= @user.id %>">
     <div class="form-group">
@@ -22,7 +22,7 @@
 <script>
 $.validator.setDefaults({
     submitHandler: function(form) {
-      alert("Reset success!");
+      alert("Reset submit success!");
       form.submit();
     }
 });
